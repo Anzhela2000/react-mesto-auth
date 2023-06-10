@@ -1,12 +1,14 @@
 import Card from './Card';
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import Header from './Header';
 
-function Main({ onEditProfile, onEditAvatar, onAddPlace, cards, onCardClick, onCardLike, onCardDelete }) {
+function Main({ onEditProfile, onEditAvatar, onAddPlace, cards, onCardClick, onCardLike, onCardDelete, userData }) {
     
     const currentUser = React.useContext(CurrentUserContext);
 
     return (<main>
+        <Header enter={"Выход"} userData={userData}/>
         <section className="profile">
             <button className="profile__avatar-button" title="Сменить аватар" onClick={onEditAvatar}>
                 <div className="profile__avatar" style={{ backgroundImage: `url(${currentUser.avatar})` }} />
