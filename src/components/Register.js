@@ -6,15 +6,16 @@ import AuthForm from './AuthForm';
 import Header from './Header.js';
 import InfoTooltip from './InfoTooltip.js';
 
-const Register = ({ handleToolPopup }) => {
+const Register = () => {
 
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
   })
 
-  const [errorInfoTooltipTitle, setErrorInfoTooltipTitle] = useState("");
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [isSuccessfull, setIsSuccessful] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('')
 
   function handleClosePopup() {
     setIsInfoTooltipOpen(false);
@@ -34,18 +35,26 @@ const Register = ({ handleToolPopup }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     auth.register(formValue.email, formValue.password).then(() => {
-      navigate('/sign-in', { replace: true });
+      navigate('/sign-in', { replace: true }
+      );
     })
-    .catch(err => {
-      setIsInfoTooltipOpen(true);
-    })
+      .catch(err => {
+        setIsInfoTooltipOpen(true);
+        setIsSuccessful(false);
+        setPopupMessage('Что-то пошло не так! Попробуйте еще раз.')
+      })
+      .finally(
+        setIsInfoTooltipOpen(true),
+        setIsSuccessful(true),
+        setPopupMessage('Вы успешно зарегистрировались!')
+      )
   }
 
   return (
     <>
       <Header enter={"Вход"} />
       <AuthForm handleSubmit={handleSubmit} handleChange={handleChange} formValue={formValue} title={"Регистрация"} buttonTitle={"Зарегистрироваться"} />
-      <InfoTooltip isSuccessfull={false} isOpen={isInfoTooltipOpen} onClose={handleClosePopup} title={'Что-то пошло не так! Попробуйте еще раз'}/>
+      <InfoTooltip isSuccessfull={isSuccessfull} isOpen={isInfoTooltipOpen} onClose={handleClosePopup} title={popupMessage} />
     </>);
 }
 

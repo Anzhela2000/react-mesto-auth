@@ -16,36 +16,38 @@ import * as auth from '../auth.js';
 
 function App() {
 
-  const [cards, setCards] = useState([]);
-
   const [loggedIn, setLoggedIn] = useState(false);
 
   const [userEmail, setUserEmail] = useState('');
 
+  const navigate = useNavigate();
+
   function handleLogin(data) {
     setLoggedIn(true);
-    setUserEmail(data)
+    setUserEmail(data);
   }
 
-  const navigate = useNavigate();
+  //Проверка токена
 
   const tokenCheck = () => {
     const jwt = localStorage.getItem('jwt');
-    if(jwt){
+    if (jwt) {
       auth.getContent(jwt)
         .then((data) => {
-          handleLogin(data.data.email)
-          navigate("/", {replace: true});
+          handleLogin(data.data.email);
+          navigate("/", { replace: true });
         })
         .catch((err) => {
           console.log(err);
         })
-      }
+    }
   }
 
- useEffect(() => {
-  tokenCheck();
- }, [])
+  useEffect(() => {
+    tokenCheck();
+  }, [])
+
+  //стэйт юзера
 
   const [currentUser, setCurrentUser] = useState({
     "name": '',
@@ -55,11 +57,14 @@ function App() {
     "cohort": ''
   });
 
+  //стэйты попапов 
+
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-  const [isTollPopupOpen, setTollPopupOpen] = useState(false);
+  
+  //лайк и удаление
 
   function handleCardLike(card) {
 
@@ -79,26 +84,25 @@ function App() {
     });
   }
 
+  //обработчики кликов
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
-
   }
 
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(true)
+    setIsAddPlacePopupOpen(true);
   }
 
   const handleCardClick = (cards) => {
     setSelectedCard(cards);
   }
 
-  function toolPopupOpen() {
-    setTollPopupOpen(true)
-  }
+  //Закрыть попапы
 
   const closeAllPopups = () => {
     setIsEditProfilePopupOpen(false);
@@ -106,6 +110,10 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard(null);
   }
+
+  //Получение карточек и информации о пользователе
+
+  const [cards, setCards] = useState([]);
 
   useEffect(() => {
     Promise.all([api.getUser(), api.getCards()])
@@ -132,6 +140,8 @@ function App() {
       })
   }
 
+  //Создать карточку
+
   const handleAddPlaceSubmit = (name, link) => {
     api.createCard(name, link)
       .then((newCard) => {
@@ -146,7 +156,7 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
 
         <Routes>
-          <Route path="/sign-up" element={<Register handleToolPopup={toolPopupOpen} onClose={closeAllPopups} isOpen={isTollPopupOpen} />} />
+          <Route path="/sign-up" element={<Register />} />
           <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
           <Route path="/" element={
             <ProtectedRoute component={Main} loggedIn={loggedIn} cards={cards}

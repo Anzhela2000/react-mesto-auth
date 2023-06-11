@@ -13,6 +13,8 @@ function Login({ handleLogin }) {
     password: ''
   })
 
+  const navigate = useNavigate();
+
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -29,11 +31,9 @@ function Login({ handleLogin }) {
     setIsInfoTooltipOpen(false);
   }
 
-  const navigate = useNavigate();
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!formValue.email || !formValue.password) {
       setErrorMessage('Both fields are required');
       return;
@@ -47,13 +47,13 @@ function Login({ handleLogin }) {
           localStorage.setItem('jwt', data.token);
           handleLogin(formValue.email);
           navigate("/", {
-            replace: true,
-            state: { isInfoTooltipOpen: true},
+            replace: true
           });
         }
       })
       .catch(error => {
         console.log(error)
+        setIsInfoTooltipOpen(true)
       })
   }
 
@@ -61,7 +61,7 @@ function Login({ handleLogin }) {
     <>
       <Header enter={"Регистрация"} />
       <AuthForm handleSubmit={handleSubmit} handleChange={handleChange} formValue={formValue} title={"Вход"} buttonTitle={"Войти"} />
-      <InfoTooltip isSuccessfull={true} isOpen={isInfoTooltipOpen} onClose={handleClosePopup} title={'Вы успешно зарегистрировались!'} />
+      <InfoTooltip isSuccessfull={false} isOpen={isInfoTooltipOpen} onClose={handleClosePopup} title={'Что-то пошло не так! Попробуйте еще раз.'} />
     </>
   );
 }

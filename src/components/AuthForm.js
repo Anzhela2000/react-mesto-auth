@@ -1,7 +1,6 @@
-import Header from "./Header";
 
-export default function AuthForm({handleSubmit, handleChange, formValue, title, buttonTitle}) {
-    
+export default function AuthForm({ handleSubmit, handleChange, formValue, title, buttonTitle }) {
+
   return (
     <>
       <main className="main">
