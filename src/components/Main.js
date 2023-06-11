@@ -4,11 +4,15 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Header from './Header';
 
 function Main({ onEditProfile, onEditAvatar, onAddPlace, cards, onCardClick, onCardLike, onCardDelete, userData }) {
-    
+
     const currentUser = React.useContext(CurrentUserContext);
 
+    const signOut = () => {
+        localStorage.removeItem('jwt');
+    }
+
     return (<main>
-        <Header enter={"Выход"} userData={userData}/>
+        <Header enter={'/sign-in'} enterTitle={'Выход'} userData={userData} signOut={signOut} />
         <section className="profile">
             <button className="profile__avatar-button" title="Сменить аватар" onClick={onEditAvatar}>
                 <div className="profile__avatar" style={{ backgroundImage: `url(${currentUser.avatar})` }} />
